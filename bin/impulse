@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const util = require("util")
+const fs = require("fs")
+
+const parser = require("../lib/parser")
+
+var input = fs.readFile("./src/test.im", "utf8", (err, input) => {
+  const ast = parser.parse(input)
+  const formattedAst = util.inspect(ast, {
+    compact: false, depth: Infinity
+  })
+
+  console.log(formattedAst)
+});

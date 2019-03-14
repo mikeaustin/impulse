@@ -1,0 +1,21 @@
+{
+  "name": "impulse",
+  "version": "0.0.1",
+  "description": "A back to basics programming language",
+  "main": "index.js",
+  "bin": "bin/impulse-js",
+  "author": "Mike Austin <mike@mike-austin.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/mikeaustin/impulse#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pegjs -o lib/parser.js src/parser.pegjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeaustin/impulse.git"
+  },
+  "dependencies": {
+    "pegjs": "^0.10.0"
+  }
+}

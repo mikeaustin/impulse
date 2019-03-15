@@ -10,6 +10,7 @@
   class TupleExpression extends Node { }
   class FunctionExpression extends Node { }
   class TuplePattern extends Node { }
+  class ApplyExpression extends Node { }
 }
 
 Block = $
@@ -23,9 +24,18 @@ Statement = $
     }
 
 Expression = $
+  / ApplyExpression
   / FunctionExpression
   / TupleExpression
   / PrimaryExpression
+
+ApplyExpression = $
+  / expr:PrimaryExpression _ args:Expression {
+      return new ApplyExpression({
+        expr: expr,
+        args: args
+      })
+    }
 
 FunctionExpression = $
   / params:Pattern _ "=>" _ expr:Expression {
@@ -34,13 +44,6 @@ FunctionExpression = $
         body: expr
       })
     }
-
-Pattern = $
-  / head:Identifier tail:(_ "," _ Identifier)+ {
-    return new TuplePattern({
-      elements: tail.reduce((r, e) => [...r, e[3]], [head])
-    })
-  }
 
 TupleExpression = $
   / head:PrimaryExpression tail:(_ "," _ PrimaryExpression)+ {
@@ -54,6 +57,26 @@ PrimaryExpression = $
   / Identifier
   / "(" head:Expression? ")" {
       return head ? head : new TupleExpression({
+        elements: []
+      })
+    }
+
+Pattern = $
+  / TuplePattern
+  / PrimaryPattern
+
+TuplePattern = $
+  / head:PrimaryPattern tail:(_ "," _ PrimaryPattern)+ {
+    return new TuplePattern({
+      elements: tail.reduce((r, e) => [...r, e[3]], [head])
+    })
+  }
+
+PrimaryPattern = $
+  / Literal
+  / Identifier
+  / "(" head:Pattern? ")" {
+      return head ? head : new TuplePattern({
         elements: []
       })
     }
